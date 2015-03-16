@@ -1,0 +1,34 @@
+PARSER_BEGIN(Exemplo)
+ 	public class Exemplo {
+		public static void main(String args[]) throws ParseException {
+
+		Exemplo parser = new Exemplo(System.in);
+		parser.Aritm();
+	}
+}
+PARSER_END(Exemplo)
+
+SKIP :{
+	" " | "\t" | "\r"
+}
+
+TOKEN :{
+	< INTEGER : (["0"-"9"])+ >
+	| < SIGN: ("+"|"-") >
+	| < LF: "\n" >
+}
+
+void Aritm() : {Token t1, t2, t3;}
+{
+   t1=<INTEGER>{
+    System.out.println("Integer = "+t1.image);
+   }
+   ( 
+		t3=<SIGN>{
+			System.out.println("Sign = "+t3.image);
+		}
+		t2=<INTEGER>{
+			System.out.println("Integer = "+t2.image);
+		}
+   )? (<LF>)
+}
