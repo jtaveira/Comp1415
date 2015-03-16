@@ -1,0 +1,37 @@
+PARSER_BEGIN(Exemplo)
+// código Java que invoca o parser
+public class Exemplo {
+ public static void main(String args[]) throws ParseException {
+// criação do objecto utilizando o constructor com argumento para
+// ler do standard input (teclado)
+ Exemplo parser = new Exemplo(System.in);
+ parser.Aritm();
+ }
+}
+PARSER_END(Exemplo)
+// símbolos que não devem ser considerados na análise
+SKIP :
+{
+" " | "\t" | "\r"
+}
+// definição dos tokens (símbolos terminais)
+TOKEN :
+{
+< INTEGER : (["0" - "9"])+ >
+| < IDENTIFIER : (["a" - "z", "A" - "Z", ".", "0" - "9"] )+ >
+| < LF : "\n" >
+}
+// definição da produção
+void Aritm() : {}
+{  "{" <LF>
+  		"\"nodes\":[" <LF>
+  				("{\"name\":\""<IDENTIFIER>"\",\"group\":"<INTEGER>"}," <LF> )*
+			   //"{\"name\":\""<IDENTIFIER>"\",\"group\":"<INTEGER>"}"  <LF>
+   		"],"<LF>
+  		"\"links\":[" <LF>
+  				("{\"source\":"<INTEGER>",\"target\":"<INTEGER>",\"value\":"<INTEGER>"}," <LF> )*
+			  //"{\"source\":"<INTEGER>",\"target\":"<INTEGER>",\"value\":"<INTEGER>"}" <LF>
+   		"]"<LF>   		
+   		
+  "}" 
+}
