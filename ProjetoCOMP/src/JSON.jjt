@@ -1,0 +1,71 @@
+options{
+	LOOKAHEAD=1;
+}
+
+PARSER_BEGIN(JSON)
+public class JSON{
+	public static void main(String args[]) throws ParseException {
+ 		JSON parser = new JSON(System.in);
+ 		SimpleNode root = parser.Expression();
+ 	}
+}
+PARSER_END(JSON)
+
+SKIP :
+{
+" " | "\t" | "\r" | "\n"
+}
+// definição dos tokens (símbolos terminais)
+TOKEN :
+{
+< INTEGER : (["0" - "9"])+ >
+| < STRING : "\""(["a" - "z", "A" - "Z", ".", "0" - "9"] )+"\"" >
+| < OPENB : "{" >
+| < CLOSEB : "}" >
+| < OPENA : "[" >
+| < CLOSEA : "]" >
+| < COMMA : "," >
+| < NODES : "\"nodes\":" >
+| < LINKS : "\"links\":" >
+| < NAME : "\"name\":" >
+| < GROUP : "\"group\":" >
+| < SOURCE : "\"source\":" >
+| < TARGET : "\"target\":" >
+| < VALUE : "\"value\":" >
+}
+
+SimpleNode Expression(): {}{
+	<OPENB> Expr1() Expr2() <CLOSEB>
+}
+
+void Expr1():{}{
+	<NODES> <OPENA> Expr3() <CLOSEA> <COMMA>
+}
+
+void Expr2():{}{
+	<LINKS> <OPENA> Expr4() <CLOSEA>
+}
+
+void Expr3():{}{
+	Expr5() Expr7()
+}
+
+void Expr4():{}{
+	Expr6() Expr8()
+}
+
+void Expr5():{}{
+	<OPENB> <NAME> <STRING> <COMMA> <GROUP> <INTEGER> <CLOSEB>
+}
+
+void Expr6():{}{
+	<OPENB> <SOURCE> <INTEGER> <COMMA> <TARGET> <INTEGER> <COMMA> <VALUE> <INTEGER> <CLOSEB>
+}
+
+void Expr7():{}{
+	[<COMMA> Expr5() Expr7()]
+}
+
+void Expr8():{}{
+	[<COMMA> Expr6() Expr8()]
+}
