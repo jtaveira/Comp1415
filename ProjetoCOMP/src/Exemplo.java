@@ -5,11 +5,14 @@ public class Exemplo implements ExemploConstants {
 // criação do objecto utilizando o constructor com argumento para
 // ler do standard input (teclado)
  Exemplo parser = new Exemplo(System.in);
- parser.Aritm();
+ parser.ReadJSON();
+
+
  }
 
 // definição da produção
-  static final public void Aritm() throws ParseException {
+  static final public void ReadJSON() throws ParseException {
+                   Token t1,t2,t3,t4,t5;
     jj_consume_token(7);
     jj_consume_token(LF);
     jj_consume_token(8);
@@ -25,9 +28,11 @@ public class Exemplo implements ExemploConstants {
         break label_1;
       }
       jj_consume_token(9);
-      jj_consume_token(IDENTIFIER);
+      t1 = jj_consume_token(IDENTIFIER);
+                                                                System.out.print("Name: " + t1.image);
       jj_consume_token(10);
-      jj_consume_token(INTEGER);
+      t2 = jj_consume_token(INTEGER);
+                                                            System.out.println("\u005ct\u005ct\u005ct Group: " + t2.image);
       jj_consume_token(11);
       jj_consume_token(LF);
     }
@@ -46,11 +51,14 @@ public class Exemplo implements ExemploConstants {
         break label_2;
       }
       jj_consume_token(14);
-      jj_consume_token(INTEGER);
+      t3 = jj_consume_token(INTEGER);
+                                                            System.out.print("Source: " + t3.image);
       jj_consume_token(15);
-      jj_consume_token(INTEGER);
+      t4 = jj_consume_token(INTEGER);
+                                                           System.out.print("\u005ct Target: " + t4.image);
       jj_consume_token(16);
-      jj_consume_token(INTEGER);
+      t5 = jj_consume_token(INTEGER);
+                                                          System.out.println("\u005ct Value: " + t5.image);
       jj_consume_token(11);
       jj_consume_token(LF);
     }

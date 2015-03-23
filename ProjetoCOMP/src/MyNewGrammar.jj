@@ -5,7 +5,9 @@ public class Exemplo {
 // criação do objecto utilizando o constructor com argumento para
 // ler do standard input (teclado)
  Exemplo parser = new Exemplo(System.in);
- parser.Aritm();
+ parser.ReadJSON();
+
+ 
  }
 }
 PARSER_END(Exemplo)
@@ -22,14 +24,17 @@ TOKEN :
 | < LF : "\n" >
 }
 // definição da produção
-void Aritm() : {}
+void ReadJSON() : {Token t1,t2,t3,t4,t5;}
 {  "{" <LF>
   		"\"nodes\":[" <LF>
-  				("{\"name\":\""<IDENTIFIER>"\",\"group\":"<INTEGER>"}," <LF> )*
+  				("{\"name\":\""t1=<IDENTIFIER> {System.out.print("Name: " + t1.image);}
+  				"\",\"group\":"t2=<INTEGER>{System.out.println("\t\t\t Group: " + t2.image);}"}," <LF> )*
 			   //"{\"name\":\""<IDENTIFIER>"\",\"group\":"<INTEGER>"}"  <LF>
    		"],"<LF>
   		"\"links\":[" <LF>
-  				("{\"source\":"<INTEGER>",\"target\":"<INTEGER>",\"value\":"<INTEGER>"}," <LF> )*
+  				("{\"source\":"t3=<INTEGER>{System.out.print("Source: " + t3.image);}
+  				",\"target\":"t4=<INTEGER>{System.out.print("\t Target: " + t4.image);}
+  				",\"value\":"t5=<INTEGER>{System.out.println("\t Value: " + t5.image);}"}," <LF> )*
 			  //"{\"source\":"<INTEGER>",\"target\":"<INTEGER>",\"value\":"<INTEGER>"}" <LF>
    		"]"<LF>   		
    		
