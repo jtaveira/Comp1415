@@ -11,17 +11,17 @@ public interface JSONConstants {
   /** RegularExpression Id. */
   int INTEGER = 5;
   /** RegularExpression Id. */
-  int STRING = 6;
+  int OPENB = 6;
   /** RegularExpression Id. */
-  int OPENB = 7;
+  int CLOSEB = 7;
   /** RegularExpression Id. */
-  int CLOSEB = 8;
+  int OPENA = 8;
   /** RegularExpression Id. */
-  int OPENA = 9;
+  int CLOSEA = 9;
   /** RegularExpression Id. */
-  int CLOSEA = 10;
+  int COMMA = 10;
   /** RegularExpression Id. */
-  int COMMA = 11;
+  int COLON = 11;
   /** RegularExpression Id. */
   int NODES = 12;
   /** RegularExpression Id. */
@@ -36,6 +36,8 @@ public interface JSONConstants {
   int TARGET = 17;
   /** RegularExpression Id. */
   int VALUE = 18;
+  /** RegularExpression Id. */
+  int STRING = 19;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -48,19 +50,20 @@ public interface JSONConstants {
     "\"\\r\"",
     "\"\\n\"",
     "<INTEGER>",
-    "<STRING>",
     "\"{\"",
     "\"}\"",
     "\"[\"",
     "\"]\"",
     "\",\"",
-    "\"\\\"nodes\\\":\"",
-    "\"\\\"links\\\":\"",
-    "\"\\\"name\\\":\"",
-    "\"\\\"group\\\":\"",
-    "\"\\\"source\\\":\"",
-    "\"\\\"target\\\":\"",
-    "\"\\\"value\\\":\"",
+    "\":\"",
+    "\"\\\"nodes\\\"\"",
+    "\"\\\"links\\\"\"",
+    "\"\\\"name\\\"\"",
+    "\"\\\"group\\\"\"",
+    "\"\\\"source\\\"\"",
+    "\"\\\"target\\\"\"",
+    "\"\\\"value\\\"\"",
+    "<STRING>",
   };
 
 }
