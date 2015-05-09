@@ -7,6 +7,7 @@ public class JSON{
 	public static void main(String args[]) throws ParseException {
  		JSON parser = new JSON(System.in);
  		SimpleNode root = parser.Expression();
+ 		root.dump("");
  	}
 }
 PARSER_END(JSON)
