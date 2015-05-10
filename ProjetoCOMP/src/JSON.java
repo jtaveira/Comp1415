@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -16,6 +19,14 @@ public class JSON/*@bgen(jjtree)*/implements JSONTreeConstants, JSONConstants {s
 //Estrutura de dados auxiliar
 static ArrayList<String> input = new ArrayList<String>();
 static ArrayList<Integer> inputId = new ArrayList<Integer>();
+
+static ArrayList<String> nodes = new ArrayList<String>();
+static ArrayList<String> nodesId = new ArrayList<String>();
+static ArrayList<String> links = new ArrayList<String>();
+static ArrayList<String> mirroredLinks = new ArrayList<String>();
+static ArrayList<String> sources = new ArrayList<String>();
+static ArrayList<String> targets = new ArrayList<String>();
+static ArrayList<String> graph = new ArrayList<String>();
 
 //TODO Representaçao intermedia
 
@@ -29,7 +40,7 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 		System.out.println("1-Enter code");
 		System.out.println("2-Read code from a text file");
 		System.out.println("3-Exit program");
-
+		
 		Scanner inn = new Scanner(System.in);
 		op = inn.nextInt();
 
@@ -41,6 +52,7 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 
 			//Imprimir arvore
 			//root.dump("");
+			break;
 		}
 
 		else if(op==2){
@@ -49,15 +61,31 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 			Scanner innn = new Scanner(System.in);
 			String filename = innn.next();
 
-			JSON parser = new JSON(readFile(filename));
-			SimpleNode root = parser.Expression();
+			File f = new File(filename);
+			if(f.exists() && !f.isDirectory()) {
 
-			//Imprimir arvore
-			//root.dump("");
+				JSON parser = new JSON(readFile(filename));
+				SimpleNode root = parser.Expression();
+
+				//Imprimir arvore
+				//root.dump("");
+				break;
+			}
+			else
+				System.out.println("The specified file does not exist.");
 		}
 	}
 
 	System.out.println("The program has ended.");
+}
+
+//limpa estrutura de dados auxiliar
+static void cleanAuxStructures(){
+	
+	input.clear();
+	inputId.clear();
+	nodes.clear();
+	links.clear();
 }
 
 static InputStream readFile(String fileName) throws IOException {
@@ -118,7 +146,7 @@ final public SimpleNode Expression() throws ParseException {
 	else{
 		System.out.println("Read input without syntactical errors.\n");
 
-		if(semanticalAnalisys()){//Checkpoint2
+		if(semanticalAnalysis()){//Checkpoint2
 
 			System.out.println("Read input without semantical errors.\n");
 
@@ -130,22 +158,26 @@ final public SimpleNode Expression() throws ParseException {
 	return jjtn000;
 }
 
+//Verifica se a estrutura de nós está corretamente definida do ponto de vista semantico
 boolean nodeVerification(){
-	
+
 	boolean noErrors = true;
-	
-	ArrayList<String> nodes = new ArrayList<String>();
-	
+	int counter = 0;
+
 	for(int i = 0; i < inputId.size(); i++)
-		if(inputId.get(i) == 14)//se for sname
+		if(inputId.get(i) == 14){
 			nodes.add(input.get(i+2));
-			
-	if(findDuplicates(nodes, "nodes"))
+			nodesId.add(Integer.toString(counter));
+			counter++;
+		}
+
+	if(findDuplicates(nodes, "nodes"))//verifica se há nós com o mesmo nome
 		noErrors = false;
-	
+
 	return noErrors;
 }
 
+//Verifica se a estrutura de ligaçoes entre nós está corretamente definida do ponto de vista semantico
 boolean linkVefirication(){
 
 	boolean noErrors = true;
@@ -159,16 +191,18 @@ boolean linkVefirication(){
 
 	int linksLine = 0;
 	int nodeIdTemp = 0;
-	ArrayList<String> links = new ArrayList<String>();
 
 	for(int i = 0; i < inputId.size(); i++){//verificaçao dos ids dos nós em links e de ligaçoes de X para X com recuperaçao de erros
 
 		if(inputId.get(i) == 16){//se for source
 
 			linksLine++;
-			int nodeId = Integer.parseInt(input.get(i+2));
+			int nodeId = Integer.parseInt(input.get(i+2));//get source value
 
-			links.add(input.get(i+2) + " " + input.get(i+5));//guarda os valores source e target daquela ligaçao
+			links.add(input.get(i+2) + " " + input.get(i+6));//guarda os valores source e target daquela ligaçao
+			mirroredLinks.add(input.get(i+6) + " " + input.get(i+2));//guarda os valores inversos daquela ligaçao
+			sources.add(input.get(i+2));//guarda o valor de source
+			targets.add(input.get(i+6));//guarda o valor de target
 
 			nodeIdTemp = nodeId;
 
@@ -180,7 +214,7 @@ boolean linkVefirication(){
 
 		else if(inputId.get(i) == 17){// se for target
 
-			int nodeId = Integer.parseInt(input.get(i+2));
+			int nodeId = Integer.parseInt(input.get(i+2));//get target value
 
 			if(!(nodeId < numNodes)){
 				System.out.println("Node id is out of bounds in target at line " + linksLine + " of the Links Section.");
@@ -194,27 +228,100 @@ boolean linkVefirication(){
 		}
 	}
 
-	if(findDuplicates(links, "links"))
-		noErrors = false;
-
+	if(noErrors){
+		
+		if(findDuplicates(links, "links"))
+			noErrors = false;
+		
+		int counter = 0;
+		
+		//verifica se se nao há ligaçoes invertidas
+		for(int i = 0; i < links.size(); i++){
+			counter++;
+			if(mirroredLinks.contains(links.get(i))){
+				System.out.println("Duplicated link at line " + counter + " of the Links Section.");
+				noErrors = false;
+			}
+		}
+	}
+	
 	return noErrors;
-
 }
 
-boolean semanticalAnalisys(){
+//Verifica se a estrutura do grafo está corretamente definida do ponto de vista semantico
+boolean graphVerification(){
+
+	boolean noErrors = true;
+	
+	for(int i = 0; i < links.size(); i++){
+		
+		if(i == 0){//se i = 0 adiciona os dois nós da ligaçao
+			graph.add(sources.get(i));
+			graph.add(targets.get(i));
+		}
+		
+		else{//se target ou source estiverem em graph, adicionam o outro dos nos a graph
+			if(graph.contains(sources.get(i)) || graph.contains(targets.get(i))){
+				if(!graph.contains(sources.get(i)))
+					graph.add(sources.get(i));
+				if(!graph.contains(targets.get(i)))
+					graph.add(targets.get(i));
+			}
+			else{
+				System.out.println("Graph is incorrect. Links must follow a sequential sequence. Error in line " + (i+1) + " of Links.");
+				noErrors=false;
+			}
+		}
+	}
+	
+	if(noErrors){
+		if(!equalLists(nodesId, graph)){//comparar graph com nodes se todos os nodes estiverem em graph ta certissimo
+			System.out.println("Graph is incorrect. There is at least one node that does not belong in the graph network.");
+			noErrors=false;
+		}
+	}
+	
+	return noErrors;
+}
+
+//Verifica se o ficheiro está corretamente definido do ponto de vista semantico
+boolean semanticalAnalysis(){
 
 	boolean noNodeErrors = true;
 	boolean noLinkErrors = true;
-	
+	boolean noGraphErrors = true;
+
 	noNodeErrors = nodeVerification();
 	noLinkErrors = linkVefirication();
-	
-	if(!noNodeErrors || !noLinkErrors){
+
+	if(noNodeErrors && noLinkErrors)//se os nós e ligaçoes estiverem semanticamente corretos, avançamos para a analise semantica do grafo
+		noGraphErrors = graphVerification();
+
+	if(!noNodeErrors || !noLinkErrors || !noGraphErrors){
 		System.out.println("\nRead input with semantical errors.\n");
 		return false;
 	}
 
 	return true;
+}
+
+boolean equalLists(ArrayList<String> one, ArrayList<String> two){     
+    if (one == null && two == null){
+        return true;
+    }
+
+    if((one == null && two != null) 
+      || one != null && two == null
+      || one.size() != two.size()){
+        return false;
+    }
+
+    one = new ArrayList<String>(one); 
+    two = new ArrayList<String>(two);   
+
+    Collections.sort(one);
+    Collections.sort(two);      
+    return one.equals(two);
 }
 
 public static boolean findDuplicates(ArrayList<String> list, String type) {
