@@ -237,22 +237,25 @@ boolean linkVefirication(){
 		}
 	}
 
-	//if(noErrors){
 		
-		if(findDuplicates(links, "links"))
-			noErrors = false;
+	if(findDuplicates(links, "links"))
+		noErrors = false;
+	
+	int counter = 0;
+	
+	//verifica se se nao há ligaçoes invertidas
+	for(int i = 0; i < links.size(); i++){
 		
-		int counter = 0;
+		counter++;
 		
-		//verifica se se nao há ligaçoes invertidas
-		for(int i = 0; i < links.size(); i++){
-			counter++;
+		if(!sources.get(i).equals(targets.get(i))){
 			if(mirroredLinks.contains(links.get(i))){
 				System.out.println("Mirrored link at line " + counter + " of the Links Section.");
 				noErrors = false;
 			}
 		}
-	//}
+	}
+
 	
 	return noErrors;
 }
