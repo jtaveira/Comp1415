@@ -277,9 +277,9 @@ boolean graphVerification(){
 			for(int j = 0; j < graph.size(); j++){
 				
 				if(graph.get(j).contains(sources.get(i)) || graph.get(j).contains(targets.get(i))){
-					if(!graph.get(j).contains(sources.get(i)))
+					if(!(graph.get(j).contains(sources.get(i))))
 						graph.get(j).add(sources.get(i));
-					if(!graph.get(j).contains(targets.get(i)))
+					if(!(graph.get(j).contains(targets.get(i))))
 						graph.get(j).add(targets.get(i));
 				}
 				else if (j == graph.size()-1){
@@ -295,9 +295,8 @@ boolean graphVerification(){
 	
 	for(int i = 0; i < graph.size(); i++){
 		
-		if(graph.size() == 1){
-			finalGraph = graph.get(i);
-		}
+		if(i == 0)
+			finalGraph.addAll(graph.get(i));
 
 		if(i < graph.size()-1){
 			for(int j = i+1; j < graph.size(); j++){
@@ -305,7 +304,7 @@ boolean graphVerification(){
 				ArrayList<String> tempList = new ArrayList<String>();
 				tempList = graph.get(i);
 				tempList.retainAll(graph.get(j));
-				
+
 				if(tempList.size() > 0){//se ha elementos comuns
 					
 					finalGraph.addAll(graph.get(i));
@@ -316,7 +315,7 @@ boolean graphVerification(){
 	}
 	
 	finalGraph = new ArrayList<String>(new LinkedHashSet<String>(finalGraph));
-	
+
 	if(noErrors){
 		if(nodesId.size() != finalGraph.size()){ //comparar graph com nodes se todos os nodes estiverem em graph ta certissimo
 			System.out.println("Graph is incorrect. There is at least one node that does not belong in the graph network.");
