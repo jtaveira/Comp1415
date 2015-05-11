@@ -19,9 +19,7 @@ NOME4: Marco António Lopes Pinto, NR4: 201100706)
 O nosso projecto consiste numa ferramenta que lê código no formato JSON que representa um grafo 
 de forças a ser usado em D3 e com output no formato DOT
 
-Para ser executado basta apenas correr os seguintes comandos:
-	- javac JSON.java //para compilar
-	- java JSON //para correr
+Para ser executado basta apenas correr os seguintes comandos
 
 Podemos correr o programa de duas maneiras diferentes:
 
