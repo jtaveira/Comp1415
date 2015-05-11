@@ -32,9 +32,11 @@ static ArrayList<String> sources = new ArrayList<String>();
 static ArrayList<String> targets = new ArrayList<String>();
 //add link values
 
-static ArrayList<String> graph = new ArrayList<String>();
+static ArrayList<ArrayList<String>> graph = new ArrayList<ArrayList<String>>();
 
-//TODO RepresentaÁao intermedia
+static ArrayList<String> finalGraph = new ArrayList<String>();
+
+//TODO Representa√ßao intermedia
 
 
 protected static JJTJSONState jjtree = new JJTJSONState();public static void main(String args[]) throws ParseException, IOException {
@@ -42,10 +44,11 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 	int op = 0;
 
 	while(op!=3){
-		System.out.println("DFG2DOT Menu:");
+		System.out.println("D3FDG2DOT Menu:");
 		System.out.println("1-Enter code");
 		System.out.println("2-Read code from a text file");
-		System.out.println("3-Exit program");
+		//System.out.println("3-Print example");
+		System.out.println("3-Exit");
 		
 		Scanner inn = new Scanner(System.in);
 		op = inn.nextInt();
@@ -67,10 +70,10 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 			Scanner innn = new Scanner(System.in);
 			String filename = innn.next();
 
-			File f = new File(filename);
-			if(f.exists() && !f.isDirectory()) {
+			File f = new File("../"+filename);
+			if(f.exists() /*&& !f.isDirectory()*/) {
 
-				JSON parser = new JSON(readFile(filename));
+				JSON parser = new JSON(readFile("../"+filename));
 				SimpleNode root = parser.Expression();
 
 				//Imprimir arvore
@@ -164,7 +167,7 @@ final public SimpleNode Expression() throws ParseException {
 	return jjtn000;
 }
 
-//Verifica se a estrutura de nÛs est· corretamente definida do ponto de vista semantico
+//Verifica se a estrutura de n√≥s est√° corretamente definida do ponto de vista semantico
 boolean nodeVerification(){
 
 	boolean noErrors = true;
@@ -177,13 +180,13 @@ boolean nodeVerification(){
 			counter++;
 		}
 
-	if(findDuplicates(nodes, "nodes"))//verifica se h· nÛs com o mesmo nome
+	if(findDuplicates(nodes, "nodes"))//verifica se h√° n√≥s com o mesmo nome
 		noErrors = false;
 
 	return noErrors;
 }
 
-//Verifica se a estrutura de ligaÁoes entre nÛs est· corretamente definida do ponto de vista semantico
+//Verifica se a estrutura de liga√ßoes entre n√≥s est√° corretamente definida do ponto de vista semantico
 boolean linkVefirication(){
 
 	boolean noErrors = true;
@@ -191,22 +194,22 @@ boolean linkVefirication(){
 	int numNodes = 0;
 
 	for(int i = 0; i < inputId.size(); i++){
-		if(inputId.get(i) == 14)//como o file esta sintaticamente certo, basta encontrar 1 elemento da linha do nÛ para o contar
+		if(inputId.get(i) == 14)//como o file esta sintaticamente certo, basta encontrar 1 elemento da linha do n√≥ para o contar
 			numNodes++;
 	}
 
 	int linksLine = 0;
 	int nodeIdTemp = 0;
 
-	for(int i = 0; i < inputId.size(); i++){//verificaÁao dos ids dos nÛs em links e de ligaÁoes de X para X com recuperaÁao de erros
+	for(int i = 0; i < inputId.size(); i++){//verifica√ßao dos ids dos n√≥s em links e de liga√ßoes de X para X com recupera√ßao de erros
 
 		if(inputId.get(i) == 16){//se for source
 
 			linksLine++;
 			int nodeId = Integer.parseInt(input.get(i+2));//get source value
 
-			links.add(input.get(i+2) + " " + input.get(i+6));//guarda os valores source e target daquela ligaÁao
-			mirroredLinks.add(input.get(i+6) + " " + input.get(i+2));//guarda os valores inversos daquela ligaÁao
+			links.add(input.get(i+2) + " " + input.get(i+6));//guarda os valores source e target daquela liga√ßao
+			mirroredLinks.add(input.get(i+6) + " " + input.get(i+2));//guarda os valores inversos daquela liga√ßao
 			sources.add(input.get(i+2));//guarda o valor de source
 			targets.add(input.get(i+6));//guarda o valor de target
 
@@ -234,54 +237,88 @@ boolean linkVefirication(){
 		}
 	}
 
-	if(noErrors){
+	//if(noErrors){
 		
 		if(findDuplicates(links, "links"))
 			noErrors = false;
 		
 		int counter = 0;
 		
-		//verifica se se nao h· ligaÁoes invertidas
+		//verifica se se nao h√° liga√ßoes invertidas
 		for(int i = 0; i < links.size(); i++){
 			counter++;
 			if(mirroredLinks.contains(links.get(i))){
-				System.out.println("Duplicated link at line " + counter + " of the Links Section.");
+				System.out.println("Mirrored link at line " + counter + " of the Links Section.");
 				noErrors = false;
 			}
 		}
-	}
+	//}
 	
 	return noErrors;
 }
 
-//Verifica se a estrutura do grafo est· corretamente definida do ponto de vista semantico
+
+//Verifica se a estrutura do grafo est√° corretamente definida do ponto de vista semantico
 boolean graphVerification(){
 
 	boolean noErrors = true;
 	
+	graph.add(new ArrayList<String>());
+	
 	for(int i = 0; i < links.size(); i++){
 		
-		if(i == 0){//se i = 0 adiciona os dois nÛs da ligaÁao
-			graph.add(sources.get(i));
-			graph.add(targets.get(i));
+		if(i == 0){//se i = 0 adiciona os dois n√≥s da liga√ßao
+			graph.get(i).add(sources.get(i));
+			graph.get(i).add(targets.get(i));
 		}
 		
 		else{//se target ou source estiverem em graph, adicionam o outro dos nos a graph
-			if(graph.contains(sources.get(i)) || graph.contains(targets.get(i))){
-				if(!graph.contains(sources.get(i)))
-					graph.add(sources.get(i));
-				if(!graph.contains(targets.get(i)))
-					graph.add(targets.get(i));
-			}
-			else{
-				System.out.println("Graph is incorrect. Links must follow a sequential sequence. Error in line " + (i+1) + " of Links.");
-				noErrors=false;
+
+			for(int j = 0; j < graph.size(); j++){
+				
+				if(graph.get(j).contains(sources.get(i)) || graph.get(j).contains(targets.get(i))){
+					if(!graph.get(j).contains(sources.get(i)))
+						graph.get(j).add(sources.get(i));
+					if(!graph.get(j).contains(targets.get(i)))
+						graph.get(j).add(targets.get(i));
+				}
+				else if (j == graph.size()-1){
+					graph.add(new ArrayList<String>());
+					graph.get(j+1).add(sources.get(i));
+					graph.get(j+1).add(sources.get(i));
+				}
 			}
 		}
 	}
 	
+	//fazer um join das listas dos grafos
+	
+	for(int i = 0; i < graph.size(); i++){
+		
+		if(graph.size() == 1){
+			finalGraph = graph.get(i);
+		}
+
+		if(i < graph.size()-1){
+			for(int j = i+1; j < graph.size(); j++){
+				
+				ArrayList<String> tempList = new ArrayList<String>();
+				tempList = graph.get(i);
+				tempList.retainAll(graph.get(j));
+				
+				if(tempList.size() > 0){//se ha elementos comuns
+					
+					finalGraph.addAll(graph.get(i));
+					finalGraph.addAll(graph.get(j));
+				}		
+			}
+		}
+	}
+	
+	finalGraph = new ArrayList<String>(new LinkedHashSet<String>(finalGraph));
+	
 	if(noErrors){
-		if(!equalLists(nodesId, graph)){//comparar graph com nodes se todos os nodes estiverem em graph ta certissimo
+		if(nodesId.size() != finalGraph.size()){ //comparar graph com nodes se todos os nodes estiverem em graph ta certissimo
 			System.out.println("Graph is incorrect. There is at least one node that does not belong in the graph network.");
 			noErrors=false;
 		}
@@ -290,7 +327,7 @@ boolean graphVerification(){
 	return noErrors;
 }
 
-//Verifica se o ficheiro est· corretamente definido do ponto de vista semantico
+//Verifica se o ficheiro est√° corretamente definido do ponto de vista semantico
 boolean semanticalAnalysis(){
 
 	boolean noNodeErrors = true;
@@ -300,7 +337,7 @@ boolean semanticalAnalysis(){
 	noNodeErrors = nodeVerification();
 	noLinkErrors = linkVefirication();
 
-	if(noNodeErrors && noLinkErrors)//se os nÛs e ligaÁoes estiverem semanticamente corretos, avanÁamos para a analise semantica do grafo
+	if(noNodeErrors && noLinkErrors)//se os n√≥s e liga√ßoes estiverem semanticamente corretos, avan√ßamos para a analise semantica do grafo
 		noGraphErrors = graphVerification();
 
 	if(!noNodeErrors || !noLinkErrors || !noGraphErrors){
@@ -311,7 +348,7 @@ boolean semanticalAnalysis(){
 	return true;
 }
 
-//Verifica se uma lista È igual a outra independetemente da ordem dos elementos
+//Verifica se uma lista √© igual a outra independetemente da ordem dos elementos
 boolean equalLists(ArrayList<String> one, ArrayList<String> two){     
     if (one == null && two == null){
         return true;
