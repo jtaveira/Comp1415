@@ -28,10 +28,11 @@ public class MyGraph {
 		
 		for(int i = 0; i < nodes.size(); i++){
 			
-			System.out.println(nodes.get(i).getName());
+			nodes.get(i).printNode();
+			System.out.println();
 			
 			for(int j = 0; j < nodes.get(i).getOutEdges().size(); j++){
-				System.out.print(" --> " + nodes.get(i).getOutEdges().get(j).getTarget().getName());
+				nodes.get(i).getOutEdges().get(j).printOutwardConnection();
 				System.out.println();
 			}
 		}		

@@ -55,11 +55,17 @@ public class MyNode {
 	
 	public void addEdge(MyNode node){
 		MyEdge edge = new MyEdge(this, node);
-		outEdges.add(edge);
+		this.outEdges.add(edge);
+		node.inEdges.add(edge);
+	}
+	
+	public void addEdge(MyNode node, Integer weight){
+		MyEdge edge = new MyEdge(this, node, weight);
+		this.outEdges.add(edge);
 		node.inEdges.add(edge);
 	}
 	
 	public void printNode(){
-		System.out.println("Node: " + this.name + " Group: " + this.group);
+		System.out.print(this.name + " (" + this.group + ")");
 	}
 }

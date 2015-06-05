@@ -144,6 +144,27 @@ final public SimpleNode Expression() throws ParseException {
 			
 			MyGraph graph = new MyGraph();
 			
+			ArrayList<MyNode> nodes = new ArrayList<MyNode>();
+			
+			for(int i = 0; i < nodesName.size(); i++){
+				MyNode node = new MyNode(nodesName.get(i), Integer.parseInt(nodesGroup.get(i)));
+				nodes.add(node);
+			}
+			
+			for(int i = 0; i < links.size(); i++){
+				String parts[] = links.get(i).split(" ");
+				
+				MyNode source = nodes.get(Integer.parseInt(parts[0]));
+				MyNode target = nodes.get(Integer.parseInt(parts[1]));
+				Integer value = Integer.parseInt(values.get(i));
+				
+				source.addEdge(target, value);
+			}
+			
+			graph.setNodes(nodes);
+			
+			graph.printGraph();
+			
 			//criar grafo
 			//fazer analise da rede
 			//criar formato de output 

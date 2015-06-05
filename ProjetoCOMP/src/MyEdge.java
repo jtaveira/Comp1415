@@ -43,6 +43,11 @@ public class MyEdge {
 	}
 	
 	public void printEdge(){
-		System.out.println(this.source.getName() + " -- " + this.weight + " -- " + this.target.getName());
-	}	
+		System.out.print(this.source.getName() + " -- " + this.weight + " --> " + this.target.getName());
+	}
+	
+	public void printOutwardConnection(){
+		System.out.print(" -- [" + this.weight + "] --> ");
+		this.target.printNode();
+	}
 }
