@@ -21,8 +21,9 @@ static	boolean sintaticError = false;
 static ArrayList<String> input = new ArrayList<String>();//tokens
 static ArrayList<Integer> inputId = new ArrayList<Integer>();//tokens kind
 
-static ArrayList<String> nodes = new ArrayList<String>();//node names
-//add node groups
+static ArrayList<String> nodesName = new ArrayList<String>();//node names
+static ArrayList<String> nodesGroup = new ArrayList<String>();//node group
+
 static ArrayList<String> nodesId = new ArrayList<String>();
 
 static ArrayList<String> links = new ArrayList<String>();
@@ -30,13 +31,10 @@ static ArrayList<String> mirroredLinks = new ArrayList<String>();
 
 static ArrayList<String> sources = new ArrayList<String>();
 static ArrayList<String> targets = new ArrayList<String>();
-//add link values
+static ArrayList<String> values = new ArrayList<String>();
 
 static ArrayList<ArrayList<String>> graph = new ArrayList<ArrayList<String>>();
-
 static ArrayList<String> finalGraph = new ArrayList<String>();
-
-//TODO Representaçao intermedia
 
 
 protected static JJTJSONState jjtree = new JJTJSONState();public static void main(String args[]) throws ParseException, IOException {
@@ -58,9 +56,6 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 
 			JSON parser = new JSON(System.in);
 			SimpleNode root = parser.Expression();
-
-			//Imprimir arvore
-			//root.dump("");
 			break;
 		}
 
@@ -75,9 +70,6 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 
 				JSON parser = new JSON(readFile("../"+filename));
 				SimpleNode root = parser.Expression();
-
-				//Imprimir arvore
-				//root.dump("");
 				break;
 			}
 			else
@@ -86,15 +78,6 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 	}
 
 	System.out.println("The program has ended.");
-}
-
-//limpa estrutura de dados auxiliar
-static void cleanAuxStructures(){
-	
-	input.clear();
-	inputId.clear();
-	nodes.clear();
-	links.clear();
 }
 
 static InputStream readFile(String fileName) throws IOException {
@@ -158,9 +141,13 @@ final public SimpleNode Expression() throws ParseException {
 		if(semanticalAnalysis()){//Checkpoint2
 
 			System.out.println("Read input without semantical errors.\n");
-
-			//checkpoint 3
-			// passar para uma estrutura de dados e converte-la no formato JSON DOT
+			
+			MyGraph graph = new MyGraph();
+			
+			//criar grafo
+			//fazer analise da rede
+			//criar formato de output 
+			
 		}	
 	}
 
@@ -175,12 +162,13 @@ boolean nodeVerification(){
 
 	for(int i = 0; i < inputId.size(); i++)
 		if(inputId.get(i) == 14){
-			nodes.add(input.get(i+2));
+			nodesName.add(input.get(i+2));
+			nodesGroup.add(input.get(i+6));
 			nodesId.add(Integer.toString(counter));
 			counter++;
 		}
 
-	if(findDuplicates(nodes, "nodes"))//verifica se há nós com o mesmo nome
+	if(findDuplicates(nodesName, "nodes"))//verifica se há nós com o mesmo nome
 		noErrors = false;
 
 	return noErrors;
@@ -212,6 +200,7 @@ boolean linkVefirication(){
 			mirroredLinks.add(input.get(i+6) + " " + input.get(i+2));//guarda os valores inversos daquela ligaçao
 			sources.add(input.get(i+2));//guarda o valor de source
 			targets.add(input.get(i+6));//guarda o valor de target
+			values.add(input.get(i+10));//guarda o valor de value
 
 			nodeIdTemp = nodeId;
 
@@ -295,7 +284,6 @@ boolean graphVerification(){
 	}
 	
 	//fazer um join das listas dos grafos
-	
 	for(int i = 0; i < graph.size(); i++){
 		
 		if(i == 0)
