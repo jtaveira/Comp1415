@@ -142,6 +142,8 @@ final public SimpleNode Expression() throws ParseException {
 
 			System.out.println("Read input without semantical errors.\n");
 			
+			
+			//criar grafo
 			MyGraph graph = new MyGraph();
 			
 			ArrayList<MyNode> nodes = new ArrayList<MyNode>();
@@ -165,8 +167,15 @@ final public SimpleNode Expression() throws ParseException {
 			
 			graph.printGraph();
 			
-			//criar grafo
+			graph.getStarNodes();
+			
 			//fazer analise da rede
+			
+			
+			
+			
+			
+			
 			//criar formato de output 
 			
 		}	

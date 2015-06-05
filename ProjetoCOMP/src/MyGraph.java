@@ -24,7 +24,56 @@ public class MyGraph {
 		this.nodes = nodes;
 	}
 	
+	public ArrayList<MyNode> getStarNodes(){
+		
+		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+		Integer maxCon = 0;
+		
+		for(int i = 0; i < this.nodes.size(); i++){
+			
+			if(this.nodes.get(i).getAdjacentNodesNum() > maxCon){
+				maxCon = this.nodes.get(i).getAdjacentNodesNum();
+				temp.clear();
+				temp.add(this.nodes.get(i));
+			}
+			
+			else if(this.nodes.get(i).getAdjacentNodesNum() == maxCon){
+				temp.add(this.nodes.get(i));
+			}
+		}
+		
+		System.out.println();
+		System.out.println(" -- STAR NODES --");
+		for(int i = 0; i < temp.size(); i++){
+			temp.get(i).printNode();
+			System.out.println();
+		}
+		
+		return temp;
+	}
+	
+	public ArrayList<MyNode> getEssentialNodes(){
+		
+		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+
+		//TODO
+		
+		return temp;
+	}
+	
+	public ArrayList<MyNode> getCentralNodes(){
+		
+		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+
+		//TODO
+		
+		return temp;
+	}
+	
 	public void printGraph(){
+		
+		System.out.println();
+		System.out.println(" -- GRAPH --");
 		
 		for(int i = 0; i < nodes.size(); i++){
 			
