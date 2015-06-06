@@ -24,12 +24,37 @@ public class MyGraph {
 		this.nodes = nodes;
 	}
 	
+	public void removeNode (Integer id){
+		
+		for(int i = 0; i < this.nodes.size(); i++){
+			
+			if(this.nodes.get(i).getId() == id){
+				
+				for(int j = 0; j < this.nodes.get(i).getInEdges().size(); j++){
+					
+					if(this.nodes.get(i).getInEdges().get(j).getTarget().getId() == id){
+						
+						for(int z = 0; z < this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().size(); z++){
+							
+							if(this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().get(z).getTarget().getId() == id){
+								this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().remove(z);
+							}	
+						}
+					}
+				}
+				
+				this.nodes.remove(i);
+				break;
+			}
+		}	
+	}
+	
 	public ArrayList<MyNode> getStarNodes(){
 		
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();
 		Integer maxCon = 0;
 		
-		for(int i = 0; i < this.nodes.size(); i++){
+		for(int i = 0; i < this.nodes.size(); i++){//descobrir os nos estrela
 			
 			if(this.nodes.get(i).getAdjacentNodesNum() > maxCon){
 				maxCon = this.nodes.get(i).getAdjacentNodesNum();
@@ -42,9 +67,15 @@ public class MyGraph {
 			}
 		}
 		
+		for(int i = 0; i < this.nodes.size(); i++){//dizer no proprio no que sao estrela
+			if(temp.contains(nodes.get(i)))
+				nodes.get(i).setIsStar(true);
+		}
+		
 		System.out.println();
 		System.out.println(" -- STAR NODES --");
-		for(int i = 0; i < temp.size(); i++){
+		
+		for(int i = 0; i < temp.size(); i++){//imprimir nos estrela
 			temp.get(i).printNode();
 			System.out.println();
 		}

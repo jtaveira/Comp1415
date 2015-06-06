@@ -45,7 +45,6 @@ protected static JJTJSONState jjtree = new JJTJSONState();public static void mai
 		System.out.println("D3FDG2DOT Menu:");
 		System.out.println("1-Enter code");
 		System.out.println("2-Read code from a text file");
-		//System.out.println("3-Print example");
 		System.out.println("3-Exit");
 		
 		Scanner inn = new Scanner(System.in);
@@ -148,12 +147,12 @@ final public SimpleNode Expression() throws ParseException {
 			
 			ArrayList<MyNode> nodes = new ArrayList<MyNode>();
 			
-			for(int i = 0; i < nodesName.size(); i++){
-				MyNode node = new MyNode(nodesName.get(i), Integer.parseInt(nodesGroup.get(i)));
+			for(int i = 0; i < nodesName.size(); i++){//criar nos
+				MyNode node = new MyNode(nodesName.get(i), i ,Integer.parseInt(nodesGroup.get(i)));
 				nodes.add(node);
 			}
 			
-			for(int i = 0; i < links.size(); i++){
+			for(int i = 0; i < links.size(); i++){//criar ligacoes
 				String parts[] = links.get(i).split(" ");
 				
 				MyNode source = nodes.get(Integer.parseInt(parts[0]));
@@ -163,18 +162,16 @@ final public SimpleNode Expression() throws ParseException {
 				source.addEdge(target, value);
 			}
 			
-			graph.setNodes(nodes);
+			graph.setNodes(nodes);//criar o grafo com os nos e ligacoes
 			
 			graph.printGraph();
 			
-			graph.getStarNodes();
-			
 			//fazer analise da rede
 			
+			graph.getStarNodes();
 			
-			
-			
-			
+			graph.removeNode(0);
+			graph.printGraph();
 			
 			//criar formato de output 
 			
