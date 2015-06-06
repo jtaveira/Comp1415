@@ -37,7 +37,7 @@ static ArrayList<ArrayList<String>> graph = new ArrayList<ArrayList<String>>();
 static ArrayList<String> finalGraph = new ArrayList<String>();
 
 
-protected static JJTJSONState jjtree = new JJTJSONState();public static void main(String args[]) throws ParseException, IOException {
+protected static JJTJSONState jjtree = new JJTJSONState();public static void main(String args[]) throws ParseException, IOException, CloneNotSupportedException {
 
 	int op = 0;
 
@@ -98,7 +98,7 @@ static InputStream readFile(String fileName) throws IOException {
 	}
 }
 
-final public SimpleNode Expression() throws ParseException {
+final public SimpleNode Expression() throws ParseException, CloneNotSupportedException {
 	/*@bgen(jjtree) Expression */
 	SimpleNode jjtn000 = new SimpleNode(JJTEXPRESSION);
 	boolean jjtc000 = true;
@@ -140,8 +140,7 @@ final public SimpleNode Expression() throws ParseException {
 		if(semanticalAnalysis()){//Checkpoint2
 
 			System.out.println("Read input without semantical errors.\n");
-			
-			
+					
 			//criar grafo
 			MyGraph graph = new MyGraph();
 			

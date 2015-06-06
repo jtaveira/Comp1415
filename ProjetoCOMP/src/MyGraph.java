@@ -38,47 +38,71 @@ public class MyGraph {
 							
 							if(this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().get(z).getTarget().getId() == id){
 								this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().remove(z);
-							}	
+							}
 						}
 					}
 				}
 				
+				for(int j = 0; j < this.nodes.get(i).getOutEdges().size(); j++){
+					
+					if(this.nodes.get(i).getOutEdges().get(j).getSource().getId() == id){
+						
+						for(int z = 0; z < this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().size(); z++){
+							
+							if(this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().get(z).getSource().getId() == id){
+								this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().remove(z);
+							}
+						}
+					}
+				}
+				
+				this.nodes.get(i).clearInEdges();
+				this.nodes.get(i).clearOutEdges();
 				this.nodes.remove(i);
 				break;
 			}
 		}	
 	}
 	
-	public boolean isFullyConnected(ArrayList<MyNode> nodeArray){
+	public boolean isFullyConnected(MyGraph temp){
 		
-		MyNode startNode = nodeArray.get(0);
+		MyNode startNode = temp.getNodes().get(0);
 		startNode.setVisited(true);
-		/////////////////////////////////////////////////////////////
 		
+		/////////////////////////////////////////////////////////////		
 		
 		ArrayList<MyNode> subset = new ArrayList<MyNode>();
+		boolean allVisited = false;
 		
 		for(int i = 0; i < startNode.getAdjacentNodes().size(); i++){
-			if(startNode.getAdjacentNodes().get(i).getVisited() == false)
+			System.out.println("Node ID: " + startNode.getAdjacentNodes().get(i).getId());
+			if(startNode.getAdjacentNodes().get(i).getVisited() == false){
+				allVisited = true;
 				subset.add(startNode.getAdjacentNodes().get(i));
-			startNode.getAdjacentNodes().get(i).setVisited(true);	
+				startNode.getAdjacentNodes().get(i).setVisited(true);	
+			}
 		}
+		System.out.println("-----------");
 		
-		for(int i = 0; i < subset.size(); i++){
-			isFullyConnected(subset.get(i).getAdjacentNodes());	
+		if(!allVisited){
+				
+			for(int i = 0; i < subset.size(); i++){
+				MyGraph subsetGraph = new MyGraph(subset.get(i).getAdjacentNodes());
+				isFullyConnected(subsetGraph);
+			}
 		}
 
 		/////////////////////////////////////////////////////////////
 		//TODO
 		
-		int count = 0;
+		int count = 0;	
 		
-		for(int i = 0; i < nodeArray.size(); i++){
-			if(nodeArray.get(i).getVisited() == true)
+		for(int i = 0; i < temp.getNodes().size(); i++){
+			if(temp.getNodes().get(i).getVisited() == true)
 				count++;
 		}
 		
-		if(count == nodeArray.size())
+		if(count == temp.getNodes().size())
 			return true;
 		
 		return false;
@@ -119,25 +143,32 @@ public class MyGraph {
 	}
 	
 	public ArrayList<MyNode> getEssentialNodes(){
-		
-		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+			
+		ArrayList<MyNode> tempArr = new ArrayList<MyNode>();
 		ArrayList<MyNode> essentials = new ArrayList<MyNode>();
 
-		temp = (ArrayList<MyNode>) this.nodes.clone();
+		tempArr =  (ArrayList<MyNode>) this.nodes.clone();
+		MyGraph temp = new MyGraph(tempArr);
 		
-		for(int i = 0; i < this.nodes.size(); i++){
+		for(int i = 0; i < temp.getNodes().size(); i++){
 			
-			if(temp.get(i).getInEdges().size() + temp.get(i).getInEdges().size() > 1){//se nao forem folhas dos grafos
+			int num = temp.getNodes().get(i).getInEdges().size() + temp.getNodes().get(i).getOutEdges().size();
+			System.out.println("Ligaçoes: " + num);
+			
+			if(temp.getNodes().get(i).getInEdges().size() + temp.getNodes().get(i).getOutEdges().size() > 1){//se nao forem folhas dos grafos
 				
-				temp.remove(i);
+				temp.removeNode(i);
 				
-				if(!isFullyConnected(temp)){
+				/*if(!isFullyConnected(temp)){
+					System.out.println("Essential");
 					essentials.add(nodes.get(i));
 					nodes.get(i).setIsEssential(true);
-				}
-			}
-
-			temp = (ArrayList<MyNode>) this.nodes.clone();
+				}*/
+				System.out.println("Ended Iteration");
+				
+				tempArr =  (ArrayList<MyNode>) this.nodes.clone();
+				temp = new MyGraph(tempArr);
+			}	
 		}
 		
 		System.out.println("Size:" + essentials.size());
@@ -148,7 +179,7 @@ public class MyGraph {
 			System.out.println();
 		}
 		
-		return temp;
+		return essentials;
 	}
 	
 	public ArrayList<MyNode> getCentralNodes(){
@@ -191,6 +222,11 @@ public class MyGraph {
 			
 			for(int j = 0; j < nodes.get(i).getOutEdges().size(); j++){
 				nodes.get(i).getOutEdges().get(j).printOutwardConnection();
+				System.out.println();
+			}
+			
+			for(int j = 0; j < nodes.get(i).getInEdges().size(); j++){
+				nodes.get(i).getInEdges().get(j).printInwardConnection();
 				System.out.println();
 			}
 		}		

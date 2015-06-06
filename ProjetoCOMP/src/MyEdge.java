@@ -50,4 +50,9 @@ public class MyEdge {
 		System.out.print(" -- [" + this.weight + "] --> ");
 		this.target.printNode();
 	}
+	
+	public void printInwardConnection(){
+		System.out.print(" <-- [" + this.weight + "] -- ");
+		this.source.printNode();
+	}
 }
