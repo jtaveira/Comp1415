@@ -170,8 +170,7 @@ final public SimpleNode Expression() throws ParseException {
 			
 			graph.getStarNodes();
 			
-			graph.removeNode(0);
-			graph.printGraph();
+			graph.getEssentialNodes();
 			
 			//criar formato de output 
 			

@@ -49,6 +49,41 @@ public class MyGraph {
 		}	
 	}
 	
+	public boolean isFullyConnected(ArrayList<MyNode> nodeArray){
+		
+		MyNode startNode = nodeArray.get(0);
+		startNode.setVisited(true);
+		/////////////////////////////////////////////////////////////
+		
+		
+		ArrayList<MyNode> subset = new ArrayList<MyNode>();
+		
+		for(int i = 0; i < startNode.getAdjacentNodes().size(); i++){
+			if(startNode.getAdjacentNodes().get(i).getVisited() == false)
+				subset.add(startNode.getAdjacentNodes().get(i));
+			startNode.getAdjacentNodes().get(i).setVisited(true);	
+		}
+		
+		for(int i = 0; i < subset.size(); i++){
+			isFullyConnected(subset.get(i).getAdjacentNodes());	
+		}
+
+		/////////////////////////////////////////////////////////////
+		//TODO
+		
+		int count = 0;
+		
+		for(int i = 0; i < nodeArray.size(); i++){
+			if(nodeArray.get(i).getVisited() == true)
+				count++;
+		}
+		
+		if(count == nodeArray.size())
+			return true;
+		
+		return false;
+	}
+	
 	public ArrayList<MyNode> getStarNodes(){
 		
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();
@@ -86,8 +121,32 @@ public class MyGraph {
 	public ArrayList<MyNode> getEssentialNodes(){
 		
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+		ArrayList<MyNode> essentials = new ArrayList<MyNode>();
 
-		//TODO
+		temp = (ArrayList<MyNode>) this.nodes.clone();
+		
+		for(int i = 0; i < this.nodes.size(); i++){
+			
+			if(temp.get(i).getInEdges().size() + temp.get(i).getInEdges().size() > 1){//se nao forem folhas dos grafos
+				
+				temp.remove(i);
+				
+				if(!isFullyConnected(temp)){
+					essentials.add(nodes.get(i));
+					nodes.get(i).setIsEssential(true);
+				}
+			}
+
+			temp = (ArrayList<MyNode>) this.nodes.clone();
+		}
+		
+		System.out.println("Size:" + essentials.size());
+		System.out.println(" -- ESSENTIAL NODES --");
+		
+		for(int i = 0; i < essentials.size(); i++){//imprimir nos essenciais
+			essentials.get(i).printNode();
+			System.out.println();
+		}
 		
 		return temp;
 	}
@@ -95,8 +154,27 @@ public class MyGraph {
 	public ArrayList<MyNode> getCentralNodes(){
 		
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+		ArrayList<MyNode> centrals = new ArrayList<MyNode>();
 
+		
+		
+		
+		
+		
 		//TODO
+		
+		
+		
+		
+		
+		
+		System.out.println();
+		System.out.println(" -- CENTRAL NODES --");
+		
+		for(int i = 0; i < centrals.size(); i++){//imprimir nos essenciais
+			centrals.get(i).printNode();
+			System.out.println();
+		}
 		
 		return temp;
 	}

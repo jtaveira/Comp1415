@@ -10,6 +10,7 @@ public class MyNode {
 	private boolean star;
 	private boolean essential;
 	private boolean central;
+	private boolean visited;
 	
 	public MyNode(String name, Integer id, Integer group, ArrayList<MyEdge> inEdges, ArrayList<MyEdge> outEdges){
 		this.name = name;
@@ -20,6 +21,7 @@ public class MyNode {
 		this.star = false;
 		this.essential = false;
 		this.central = false;
+		this.visited = false;
 	}
 	
 	public MyNode(String name, Integer id, Integer group){
@@ -31,6 +33,7 @@ public class MyNode {
 		this.star = false;
 		this.essential = false;
 		this.central = false;
+		this.visited = false;
 	}
 	
 	public String getName(){
@@ -51,6 +54,10 @@ public class MyNode {
 	
 	public ArrayList<MyEdge> getOutEdges(){
 		return outEdges;
+	}
+	
+	public boolean getVisited(){
+		return visited;
 	}
 	
 	public boolean isStar(){
@@ -75,6 +82,10 @@ public class MyNode {
 	
 	public void setIsCentral(boolean bool){
 		this.central = bool;
+	}
+	
+	public void setVisited(boolean bool){
+		this.visited = bool;
 	}
 	
 	public void clearInEdges(){
