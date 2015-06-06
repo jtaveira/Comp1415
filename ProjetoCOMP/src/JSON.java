@@ -171,6 +171,8 @@ final public SimpleNode Expression() throws ParseException, CloneNotSupportedExc
 			
 			graph.getEssentialNodes();
 			
+			graph.getCentralNodes();
+			
 			//criar formato de output 
 			
 		}	

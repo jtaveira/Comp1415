@@ -7,6 +7,8 @@ public class MyNode {
 	private Integer group;
 	private ArrayList<MyEdge> inEdges;
 	private ArrayList<MyEdge> outEdges;
+	private ArrayList<MyEdge> removedInEdges = new ArrayList<MyEdge>();
+	private ArrayList<MyEdge> removedOutEdges = new ArrayList<MyEdge>();
 	private boolean star;
 	private boolean essential;
 	private boolean central;
@@ -49,15 +51,23 @@ public class MyNode {
 	}
 	
 	public ArrayList<MyEdge> getInEdges(){
-		return inEdges;
+		return this.inEdges;
 	}
 	
 	public ArrayList<MyEdge> getOutEdges(){
-		return outEdges;
+		return this.outEdges;
+	}
+	
+	public ArrayList<MyEdge> getRemovedInEdges(){
+		return this.removedInEdges;
+	}
+	
+	public ArrayList<MyEdge> getRemovedOutEdges(){
+		return this.removedOutEdges;
 	}
 	
 	public boolean getVisited(){
-		return visited;
+		return this.visited;
 	}
 	
 	public boolean isStar(){
@@ -70,6 +80,14 @@ public class MyNode {
 	
 	public boolean isCentral(){
 		return this.central;
+	}
+	
+	public void addRemovedInEdge(MyEdge edge){
+		this.removedInEdges.add(edge);
+	}
+	
+	public void addRemovedOutEdge(MyEdge edge){
+		this.removedOutEdges.add(edge);
 	}
 	
 	public void setIsStar(boolean bool){
@@ -95,6 +113,15 @@ public class MyNode {
 	public void clearOutEdges(){
 		this.outEdges.clear();
 	}
+	
+	public void resetConnections(){
+		this.inEdges.addAll(this.removedInEdges);
+		this.outEdges.addAll(this.removedOutEdges);
+		
+		this.removedInEdges.clear();
+		this.removedOutEdges.clear();
+	}
+	
 	
 	public ArrayList<MyNode> getAdjacentNodes(){
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();

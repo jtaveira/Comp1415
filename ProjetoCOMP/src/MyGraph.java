@@ -24,6 +24,33 @@ public class MyGraph {
 		this.nodes = nodes;
 	}
 	
+	public void clearNodes(){
+		this.nodes.clear();
+	}
+	
+	public void clearVisitedNodes(){
+		for(int i = 0; i < this.nodes.size(); i++){
+			this.nodes.get(i).setVisited(false);
+		}
+	}
+	
+	public void resetConnections(){
+		
+		for(int i = 0; i < this.nodes.size(); i++){
+			this.nodes.get(i).resetConnections();
+		}
+	}
+	
+	public MyNode getNode(int id){
+		
+		for(int i = 0; i < this.nodes.size(); i++){
+			if(this.nodes.get(i).getId() == id)
+				return this.nodes.get(i);
+		}
+		
+		return null;
+	}
+	
 	public void removeNode (Integer id){
 		
 		for(int i = 0; i < this.nodes.size(); i++){
@@ -37,6 +64,7 @@ public class MyGraph {
 						for(int z = 0; z < this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().size(); z++){
 							
 							if(this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().get(z).getTarget().getId() == id){
+								this.nodes.get(i).getInEdges().get(j).getSource().addRemovedOutEdge(this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().get(z));
 								this.nodes.get(i).getInEdges().get(j).getSource().getOutEdges().remove(z);
 							}
 						}
@@ -50,59 +78,41 @@ public class MyGraph {
 						for(int z = 0; z < this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().size(); z++){
 							
 							if(this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().get(z).getSource().getId() == id){
+								this.nodes.get(i).getOutEdges().get(j).getTarget().addRemovedInEdge(this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().get(z));
 								this.nodes.get(i).getOutEdges().get(j).getTarget().getInEdges().remove(z);
 							}
 						}
 					}
 				}
 				
-				this.nodes.get(i).clearInEdges();
-				this.nodes.get(i).clearOutEdges();
 				this.nodes.remove(i);
 				break;
 			}
 		}	
 	}
 	
-	public boolean isFullyConnected(MyGraph temp){
+	public boolean isFullyConnected(MyGraph temp, MyNode nodeStart){//verifica se o grafo esta todo ligado
 		
-		MyNode startNode = temp.getNodes().get(0);
+		MyNode startNode = nodeStart;
 		startNode.setVisited(true);
 		
-		/////////////////////////////////////////////////////////////		
-		
-		ArrayList<MyNode> subset = new ArrayList<MyNode>();
-		boolean allVisited = false;
-		
 		for(int i = 0; i < startNode.getAdjacentNodes().size(); i++){
-			System.out.println("Node ID: " + startNode.getAdjacentNodes().get(i).getId());
-			if(startNode.getAdjacentNodes().get(i).getVisited() == false){
-				allVisited = true;
-				subset.add(startNode.getAdjacentNodes().get(i));
-				startNode.getAdjacentNodes().get(i).setVisited(true);	
-			}
-		}
-		System.out.println("-----------");
-		
-		if(!allVisited){
-				
-			for(int i = 0; i < subset.size(); i++){
-				MyGraph subsetGraph = new MyGraph(subset.get(i).getAdjacentNodes());
-				isFullyConnected(subsetGraph);
+			
+			if(startNode.getAdjacentNodes().get(i).getVisited() == false){//para cada no vizinho nao visitado
+				startNode.getAdjacentNodes().get(i).setVisited(true);//fica automaticamente visitado
+				MyGraph tempAux = new MyGraph(startNode.getAdjacentNodes().get(i).getAdjacentNodes());
+				isFullyConnected(tempAux, startNode.getAdjacentNodes().get(i));//chama recursivamente com o grafo dos vizinhos deste vizinho
 			}
 		}
 
-		/////////////////////////////////////////////////////////////
-		//TODO
-		
 		int count = 0;	
 		
-		for(int i = 0; i < temp.getNodes().size(); i++){
+		for(int i = 0; i < temp.getNodes().size(); i++){//conta os nos visitados
 			if(temp.getNodes().get(i).getVisited() == true)
 				count++;
 		}
 		
-		if(count == temp.getNodes().size())
+		if(count == temp.getNodes().size())//se os nos visitados forem iguais aos numero de nos da rede, esta tudo ligado
 			return true;
 		
 		return false;
@@ -152,26 +162,24 @@ public class MyGraph {
 		
 		for(int i = 0; i < temp.getNodes().size(); i++){
 			
-			int num = temp.getNodes().get(i).getInEdges().size() + temp.getNodes().get(i).getOutEdges().size();
-			System.out.println("Ligaçoes: " + num);
-			
 			if(temp.getNodes().get(i).getInEdges().size() + temp.getNodes().get(i).getOutEdges().size() > 1){//se nao forem folhas dos grafos
 				
 				temp.removeNode(i);
 				
-				/*if(!isFullyConnected(temp)){
-					System.out.println("Essential");
+				if(!isFullyConnected(temp, temp.getNodes().get(0))){
 					essentials.add(nodes.get(i));
 					nodes.get(i).setIsEssential(true);
-				}*/
-				System.out.println("Ended Iteration");
-				
-				tempArr =  (ArrayList<MyNode>) this.nodes.clone();
-				temp = new MyGraph(tempArr);
+				}
 			}	
+			
+			tempArr =  (ArrayList<MyNode>) this.nodes.clone();
+			temp.clearNodes();
+			temp = new MyGraph(tempArr);
+			temp.resetConnections();
+			temp.clearVisitedNodes();
 		}
 		
-		System.out.println("Size:" + essentials.size());
+		System.out.println();
 		System.out.println(" -- ESSENTIAL NODES --");
 		
 		for(int i = 0; i < essentials.size(); i++){//imprimir nos essenciais
