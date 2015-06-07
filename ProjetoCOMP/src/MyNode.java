@@ -119,6 +119,10 @@ public class MyNode {
 		this.visited = bool;
 	}
 	
+	public void setName(String name){
+		this.name = name;
+	}
+	
 	public void clearInEdges(){
 		this.inEdges.clear();
 	}

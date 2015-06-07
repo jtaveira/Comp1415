@@ -316,6 +316,14 @@ public class MyGraph {
 		return centrals;
 	}
 
+	public void removeInvalidChars(){
+		
+		for(int i = 0; i < this.nodes.size(); i++){
+			this.nodes.get(i).setName(this.nodes.get(i).getName().replace("\"", ""));
+			
+		}
+	}
+	
 	public void printGraph(){
 
 		System.out.println();
@@ -343,14 +351,48 @@ public class MyGraph {
 		GraphViz gv = new GraphViz();
 		gv.addln(gv.start_graph());
 		
+		for(int i = 0; i < nodes.size(); i++){
+			
+			String star = "";
+			String essential = "";
+			String central = "";
+			String label = "";
+			
+			if(nodes.get(i).isStar())
+				star = "shape=star";
+				
+			if(nodes.get(i).isEssential())
+				if(nodes.get(i).isStar())
+					essential = ", color=red";
+				else
+					essential = "color=red";
+					
+			if(nodes.get(i).isCentral())
+				if(nodes.get(i).isStar() || nodes.get(i).isEssential())
+					central = ", style=filled, fillcolor=yellow";
+				else
+					central = "style=filled, fillcolor=yellow";
+			
+			if(nodes.get(i).isStar() || nodes.get(i).isEssential() || nodes.get(i).isCentral())
+				label = ", label=" + "\"G" + nodes.get(i).getGroup() + " " + nodes.get(i).getName() + "\"";
+			else
+				label = "label=" + "\"G" + nodes.get(i).getGroup() + " " + nodes.get(i).getName() + "\"";
+			
+			gv.addln("node" + nodes.get(i).getId() + "[" + star + essential + central + label + "]");
+			
+		}
 		
-		//TODO
-		//gv.addln("A -> B;");
-		//gv.addln("A -> C;");
-		
+		for(int i = 0; i < nodes.size(); i++){
+			
+			for(int j = 0; j < nodes.get(i).getOutEdges().size(); j++){
+				
+				String value = "fontcolor=red, label=" + nodes.get(i).getOutEdges().get(j).getWeight();
+						
+				gv.addln("node" + nodes.get(i).getId() + " ->" + "node" + nodes.get(i).getOutEdges().get(j).getTarget().getId() + "[" + value +"]");
+			}
+		}
 		
 		gv.addln(gv.end_graph());
-		System.out.println(gv.getDotSource());
 
 		String type = "dot";
 

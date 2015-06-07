@@ -163,7 +163,7 @@ final public SimpleNode Expression() throws ParseException, CloneNotSupportedExc
 			
 			graph.setNodes(nodes);//criar o grafo com os nos e ligacoes
 			
-			graph.printGraph();
+			//graph.printGraph();
 			
 			//fazer analise da rede
 			
@@ -175,11 +175,12 @@ final public SimpleNode Expression() throws ParseException, CloneNotSupportedExc
 			
 			//criar formato de output 
 			
+			graph.removeInvalidChars();
+			
 			graph.printToDot();
 			
 			graph.makeImageFromDot();
-			
-			
+				
 		}	
 	}
 

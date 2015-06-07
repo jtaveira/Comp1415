@@ -15,6 +15,7 @@ public class MyEdge {
 	public MyEdge(MyNode source, MyNode target){
 		this.source = source;
 		this.target = target;
+		this.weight = 1;
 	}
 	
 	public int getWeight(){
