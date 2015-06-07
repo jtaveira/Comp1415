@@ -135,7 +135,6 @@ public class MyNode {
 		this.removedOutEdges.clear();
 	}
 	
-	
 	public ArrayList<MyNode> getAdjacentNodes(){
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();
 		
