@@ -1,4 +1,10 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 public class MyGraph {
 
@@ -126,9 +132,43 @@ public class MyGraph {
 	
 	public ArrayList<MyNode> getShortestPath(MyNode startNode, MyNode endNode){
 		
-		//TODO
-		
-		return null;
+		Map<MyNode, Boolean> vis = new HashMap<MyNode, Boolean>();
+		Map<MyNode, MyNode> prev = new HashMap<MyNode, MyNode>();
+		ArrayList<MyNode> directions = new  ArrayList<MyNode>();
+	    Queue q = new LinkedList();
+	    
+	    q.add(startNode);
+	    vis.put(startNode, true);
+	    
+	    while(!q.isEmpty()){
+	    	
+	    	startNode = (MyNode) q.remove();
+	    	
+	        if (startNode.equals(endNode)){
+	            break;
+	        }
+	        
+	        else{
+	            for(MyNode node : startNode.getAdjacentNodes()){
+	                if(!vis.containsKey(node)){
+	                    q.add(node);
+	                    vis.put(node, true);
+	                    prev.put(node, startNode);
+	                }
+	            }
+	        }
+	    }
+	    
+	    if (!startNode.equals(endNode)){
+	        System.out.println("can't reach destination");
+	    }
+	    
+	    for(MyNode node = endNode; node != null; node = prev.get(node)) {
+	        directions.add(node);
+	    }
+
+	    Collections.reverse(directions);
+	    return directions;
 	}
 	
 	public ArrayList<MyNode> getStarNodes(){
@@ -213,11 +253,28 @@ public class MyGraph {
 		for(int i = 0; i < this.nodes.size(); i++){
 			for(int j = 0; j < this.nodes.size(); j++){
 				
-				temp.add(getShortestPath(this.nodes.get(i), this.nodes.get(j)));
-				
+				if(i != j)
+					temp.add(getShortestPath(this.nodes.get(i), this.nodes.get(j)));
 			}
 		}
+		
+		/////////// PRINT PATHS ////////////////////////
+		/*
+		System.out.println();
+		
+		for(int j = 0; j < temp.size(); j++){	
+			for(int i = 0; i < temp.get(j).size(); i++){	
 				
+				System.out.print(temp.get(j).get(i).getId());
+				
+				if(i != temp.get(j).size() - 1)
+					System.out.print(" -> ");
+			}
+			System.out.println();
+		}
+		*/
+		////////////////////////////////////////////////
+		
 		//contar os nos que aparecem mais vezes
 		for(int i = 0; i < this.nodes.size(); i++){
 			for(int j = 0; j < temp.size(); j++){	
