@@ -5,10 +5,11 @@ public class Proba
    public static void main(String[] args)
    {
       Proba p = new Proba();
-      p.start2();
+      p.makeDot();
+      //p.makeImageFromDot();
    }
 
-   private void start()
+   private void makeDot()
    {
       GraphViz gv = new GraphViz();
       gv.addln(gv.start_graph());
@@ -17,30 +18,24 @@ public class Proba
       gv.addln(gv.end_graph());
       System.out.println(gv.getDotSource());
       
-      String type = "gif";
-//      String type = "dot";
+      String type = "dot";
 
-      File out = new File("C:/Users/TaveiraDude/Desktop/workspaceJava/comp/tmp/out." + type);
+      File out = new File("../comp/output/out." + type);
       gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );
    }
    
-   /**
-    * Read the DOT source from a file,
-    * convert to image and store the image in the file system.
-    */
-   private void start2()
+   private void makeImageFromDot()
    {
 
-	   String input = "C:/Users/TaveiraDude/Desktop/workspaceJava/comp/sample/sample.dot";
+	   String input = "../comp/output/out.dot";
 	   
 	   GraphViz gv = new GraphViz();
 	   gv.readSource(input);
 	   System.out.println(gv.getDotSource());
    		
       String type = "gif";
-//    String type = "dot";
 
-	   File out = new File("C:/Users/TaveiraDude/Desktop/workspaceJava/comp/tmp/out." + type);
+	   File out = new File("../comp/graph/out." + type);
 	   gv.writeGraphToFile( gv.getGraph( gv.getDotSource(), type ), out );
    }
 }

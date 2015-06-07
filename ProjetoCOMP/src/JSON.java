@@ -175,9 +175,9 @@ final public SimpleNode Expression() throws ParseException, CloneNotSupportedExc
 			
 			//criar formato de output 
 			
+			graph.printToDot();
 			
-			
-			
+			graph.makeImageFromDot();
 			
 			
 		}	

@@ -33,14 +33,9 @@ import java.io.InputStreamReader;
 
 public class GraphViz
 {
-   /**
-    * The dir. where temporary files will be created.
-    */
-//   private static String TEMP_DIR = "/tmp";	// Linux
-   private static String TEMP_DIR = "C:/Users/TaveiraDude/Desktop/workspaceJava/comp/tmp";	// Windows
+   private static String TEMP_DIR = "../comp/output";
 
-//   private static String DOT = "/usr/bin/dot";	// Linux
-   private static String DOT = "c:/Program Files (x86)/Graphviz2.38/bin/dot.exe";	// Windows
+   private static String DOT = "../comp/Graphviz2.38/bin/dot.exe";
 
 
    private StringBuilder graph = new StringBuilder();
