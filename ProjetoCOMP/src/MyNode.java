@@ -13,6 +13,7 @@ public class MyNode {
 	private boolean essential;
 	private boolean central;
 	private boolean visited;
+	private Integer appearances = 0;
 	
 	public MyNode(String name, Integer id, Integer group, ArrayList<MyEdge> inEdges, ArrayList<MyEdge> outEdges){
 		this.name = name;
@@ -48,6 +49,10 @@ public class MyNode {
 	
 	public Integer getGroup(){
 		return this.group;
+	}
+	
+	public Integer getAppearances(){
+		return this.appearances;
 	}
 	
 	public ArrayList<MyEdge> getInEdges(){
@@ -88,6 +93,14 @@ public class MyNode {
 	
 	public void addRemovedOutEdge(MyEdge edge){
 		this.removedOutEdges.add(edge);
+	}
+	
+	public void setAppearances(Integer appearance){
+		this.appearances = appearance;
+	}
+	
+	public void addAppearances(Integer appearance){
+		this.appearances += appearance;
 	}
 	
 	public void setIsStar(boolean bool){

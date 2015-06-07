@@ -34,6 +34,12 @@ public class MyGraph {
 		}
 	}
 	
+	public void clearAppearanceNodes(){
+		for(int i = 0; i < this.nodes.size(); i++){
+			this.nodes.get(i).setAppearances(0);
+		}
+	}
+	
 	public void resetConnections(){
 		
 		for(int i = 0; i < this.nodes.size(); i++){
@@ -118,6 +124,13 @@ public class MyGraph {
 		return false;
 	}
 	
+	public ArrayList<MyNode> getShortestPath(MyNode startNode, MyNode endNode){
+		
+		//TODO
+		
+		return null;
+	}
+	
 	public ArrayList<MyNode> getStarNodes(){
 		
 		ArrayList<MyNode> temp = new ArrayList<MyNode>();
@@ -192,30 +205,57 @@ public class MyGraph {
 	
 	public ArrayList<MyNode> getCentralNodes(){
 		
-		ArrayList<MyNode> temp = new ArrayList<MyNode>();
+		ArrayList<ArrayList<MyNode>> temp = new ArrayList<ArrayList<MyNode>>();
 		ArrayList<MyNode> centrals = new ArrayList<MyNode>();
+		Integer maxAppearances = 0;
 
+		//ve todos os caminhos mais curtos existentes
+		for(int i = 0; i < this.nodes.size(); i++){
+			for(int j = 0; j < this.nodes.size(); j++){
+				
+				temp.add(getShortestPath(this.nodes.get(i), this.nodes.get(j)));
+				
+			}
+		}
+				
+		//contar os nos que aparecem mais vezes
+		for(int i = 0; i < this.nodes.size(); i++){
+			for(int j = 0; j < temp.size(); j++){	
+				
+				if(temp.get(j).contains(this.nodes.get(i))){
+					this.nodes.get(i).addAppearances(1);
+						
+				}		
+			}
+		}
 		
+		for(int i = 0; i < this.nodes.size(); i++){//descobrir os nos centrais
+			
+			if(this.nodes.get(i).getAppearances() > maxAppearances){
+				maxAppearances = this.nodes.get(i).getAppearances();
+				centrals.clear();
+				centrals.add(this.nodes.get(i));
+			}
+			
+			else if(this.nodes.get(i).getAppearances() == maxAppearances){
+				centrals.add(this.nodes.get(i));
+			}
+		}
 		
-		
-		
-		
-		//TODO
-		
-		
-		
-		
-		
-		
+		for(int i = 0; i < this.nodes.size(); i++){//dizer no proprio no que sao centrais
+			if(centrals.contains(nodes.get(i)))
+				nodes.get(i).setIsCentral(true);
+		}
+				
 		System.out.println();
 		System.out.println(" -- CENTRAL NODES --");
 		
-		for(int i = 0; i < centrals.size(); i++){//imprimir nos essenciais
+		for(int i = 0; i < centrals.size(); i++){//imprimir nos centrais
 			centrals.get(i).printNode();
 			System.out.println();
 		}
 		
-		return temp;
+		return centrals;
 	}
 	
 	public void printGraph(){
